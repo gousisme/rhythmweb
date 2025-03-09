@@ -1,0 +1,300 @@
+body {
+	text-align: center;
+	font-family: "Montserrat", sans-serif;
+	background: #181825;
+	color: #cdd6f4;
+	
+	display: flex;
+    justify-content: center;  /* Center horizontally */
+    align-items: center;  /* Center vertically */
+    height: 100vh;  /* Full viewport height */
+    margin: 0;  /* Remove default margin */
+    flex-direction: column; /* Stack elements vertically */
+}
+.game-container {
+	margin-top: 50px;
+}
+.key-box {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto; /* Prevents flexbox from resizing */
+    font-size: 24px;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #fff;
+    margin: 5px;
+    background: #222;
+    color: #ff0;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background 0.4s, box-shadow 0.4s, transform 0.4s;
+}
+
+
+.correct {
+    background: linear-gradient(145deg, #008cff, #00bfff) !important;
+    box-shadow: 0 0 30px rgba(0, 140, 255, 1) !important;
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out !important;
+	border: 2px solid transparent !important;
+}
+.correct::before {
+    content: "";
+    position: absolute;
+    inset: -2px; /* Adjusts border size */
+    background: linear-gradient(145deg, #008cff, #00bfff) !important;
+    z-index: -1;
+    border-radius: inherit;
+}
+
+.wrong {
+    background: linear-gradient(145deg, #ff004c, #ff5e00) !important;
+    box-shadow: 0 0 30px rgba(255, 0, 76, 1) !important;
+    transform: scale(1.1);
+    transition: all 0.1s ease-in-out !important;
+	border: 2px solid transparent !important;
+}
+
+.wrong::before {
+    content: "";
+    position: absolute;
+    inset: -2px; /* Adjusts border size */
+    background: linear-gradient(145deg, #ff004c, #ff5e00) !important;
+    z-index: -1;
+    border-radius: inherit;
+}
+
+.key-box:active {
+    transform: scale(0.95);
+}
+
+.timing-bar-container {
+	width: 300px;
+	height: 5px;
+	background: #1e1e2e;
+	margin: 20px auto;
+	position: relative;
+	border-radius: 10px;
+	/*box-shadow: 0 0 15px #999;*/
+}
+.timing-bar {
+	height: 100%;
+	background: #313244;
+	width: 100%;
+	position: absolute;
+	border-radius: 10px;
+}
+.timing-marker {
+	height: 100%;
+	width: 10px;
+	background: #cdd6f4;
+	position: absolute;
+	left: 0;
+	box-shadow: 0 0 10px #cdd6f4;
+	transition: left 0.1s linear;
+}
+.hit-zone {
+	height: 100%;
+	width: 20px;
+	background: #f38ba8;
+	position: absolute;
+	right: 50px;
+	border-radius: 0px;
+	box-shadow: 0 0 20px #f38ba8;
+}
+.good-zone {
+	height: 100%;
+	width: 60px;
+	background: #f38ba840;
+	position: absolute;
+	right: 31px;
+	border-radius: 0px;
+	box-shadow: 0 0 15px #f38ba840;
+}
+.combo {
+	font-size: 24px;
+	font-weight: 800;
+	margin-top: 10px;
+	color: #74c7ec;
+	text-shadow: 0 0 10px #74c7ec;
+}
+.sequence-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+	gap: 10px;
+}
+.sequence-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px; /* Match .key-box */
+    height: 60px; /* Match .key-box */
+    /*border: 2px solid #fff;*/
+    border: 2px solid #313244;
+    background: #313244;
+    color: #cdd6f4;
+    border-radius: 12px;
+    /*box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+    font-weight: bold;*/
+    text-transform: uppercase;
+	font-size: 25px;
+	-webkit-text-stroke: 3px white; /* Adds thickness */
+}
+
+.scoreboard, .highscore {
+	margin-top: 10px;
+	/*color: #cdd6f4;
+	text-shadow: 0 0 10px #cdd6f4;*/
+}
+
+.scoreboarddiv {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	text-align: left;
+}
+
+.highscorediv {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	text-align: right;
+}
+
+#hit-feedback {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, top 0.2s ease-out;
+}
+
+#hit-feedback.show {
+    top: 40%; /* Moves up */
+}
+
+/* From Uiverse.io by vinodjangid07 */ 
+.button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #313244;
+  border: none;
+  font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: .3s;
+  overflow: hidden;
+  position: relative;
+  
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  text-align: right;
+}
+
+.svgIcon {
+  width: 12px;
+  transition-duration: .3s;
+}
+
+.svgIcon path {
+  fill: white;
+}
+
+.button:hover {
+  width: 140px;
+  border-radius: 50px;
+  transition-duration: .3s;
+  background-color: #f38ba8;
+  box-shadow: 0 0 10px #f38ba8;
+  align-items: center;
+}
+
+.button:hover .svgIcon {
+  width: 50px;
+  transition-duration: .3s;
+  transform: translateY(60%);
+}
+
+.button::before {
+  position: absolute;
+  top: -20px;
+  content: "Delete";
+  color: white;
+  transition-duration: .3s;
+  font-size: 2px;
+}
+
+.button:hover::before {
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(30px);
+  transition-duration: .3s;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f38ba8;
+  border-radius: 20px;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #181825;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #a6e3a1;
+  box-shadow: 0 0 5px #a6e3a1;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.speed-label {
+  display: flex;
+  align-items: center;
+  font-weight:800;
+  gap: 10px; /* Space between text and switch */
+}

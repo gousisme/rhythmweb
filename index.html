@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm</title>
+    <link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="game-container">
+        <div class="sequence-container" id="sequence-display"></div>
+    </div>
+    <div class="timing-bar-container">
+        <div class="timing-bar"></div>
+        <div class="good-zone"></div>
+        <div class="hit-zone"></div>
+        <div class="timing-marker" id="marker"></div>
+    </div>
+	<div class="scoreboarddiv">
+		<div class="combo">Combo: <span id="combo-count">0</span></div>
+		<div class="scoreboard">
+			<span style="color:#a6e3a1;">Perfect: </span><span id="perfect-count">0</span><br><span style="color:#fab387;">Good: </span><span id="good-count">0</span><br><span style="color:#f38ba8;">Bad: </span><span id="bad-count">0</span>
+		</div>
+    </div>
+	<div class="highscorediv">
+		<div class="combo">Highscore: <span id="highscore-combo">0</span></div>
+		<div class="highscore">
+			<span style="color:#a6e3a1;">Perfect: </span><span id="highscore-perfect">0</span><br><span style="color:#fab387;">Good: </span><span id="highscore-good">0</span><br><span style="color:#f38ba8;">Bad: </span><span id="highscore-bad">0</span>
+		</div>
+	</div>
+	<button class="button" onclick="clearHighscore()" style="align:right;">
+	  <svg viewBox="0 0 448 512" class="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>
+	</button>
+	<br>
+	<label class="speed-label">
+	  <label class="switch">
+		<input type="checkbox" id="speedToggle">
+		<span class="slider"></span>
+	  </label>
+	  <span id="speedText">Speed Increase</span>
+	</label>
+	<div id="hit-feedback"></div>
+	<div id="player"></div>
+    <script>
+        let combo = 0;
+        let perfectCount = 0, goodCount = 0, badCount = 0;
+        let marker = document.getElementById('marker');
+        let comboCount = document.getElementById('combo-count');
+        let sequenceDisplay = document.getElementById('sequence-display');
+        let perfectDisplay = document.getElementById('perfect-count');
+        let goodDisplay = document.getElementById('good-count');
+        let badDisplay = document.getElementById('bad-count');
+        let position = 0;
+        let sequence = [];
+        let inputIndex = 0;
+        let gameOver = false;
+		let length = 0
+        const keys = ['ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight'];
+        const keySymbols = { 
+			'ArrowLeft': '<i class="fa-solid fa-chevron-left"></i>', 
+			'ArrowUp': '<i class="fa-solid fa-chevron-up"></i>', 
+			'ArrowDown': '<i class="fa-solid fa-chevron-down"></i>', 
+			'ArrowRight': '<i class="fa-solid fa-chevron-right"></i>' 
+		};
+		let sequenceCompleted = false;
+		let speedIncrease = 0;
+		document.getElementById("speedToggle").addEventListener("change", function () {
+			setCookie("speedMode", this.checked ? "fast" : "normal");
+			speedIncrease = this.checked ? 1 : 0; // Faster when checked
+		});
+
+		
+		function setCookie(name, value) {
+			document.cookie = `${name}=${value}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+		}
+
+		function getCookie(name) {
+			let cookies = document.cookie.split("; ");
+			for (let cookie of cookies) {
+				let [key, value] = cookie.split("=");
+				if (key === name) {
+					return isNaN(value) ? value : parseInt(value); // Keep strings, parse numbers
+				}
+			}
+			return null; // Return null if not found
+		}
+
+		document.addEventListener("DOMContentLoaded", () => {
+			highscoreCombo = getCookie("highscoreCombo");
+			highscorePerfect = getCookie("highscorePerfect");
+			highscoreGood = getCookie("highscoreGood");
+			highscoreBad = getCookie("highscoreBad");
+
+			document.getElementById('highscore-combo').textContent = highscoreCombo;
+			document.getElementById('highscore-perfect').textContent = highscorePerfect;
+			document.getElementById('highscore-good').textContent = highscoreGood;
+			document.getElementById('highscore-bad').textContent = highscoreBad;
+		});
+		
+		document.addEventListener("DOMContentLoaded", () => {
+			const speedToggle = document.getElementById("speedToggle");
+			if (!speedToggle) return; // Prevents errors if element is missing
+
+			// Load saved speed setting from cookie
+			const savedSpeed = getCookie("speedMode");
+			if (savedSpeed !== null) {
+				speedToggle.checked = savedSpeed === "fast";
+			}
+		});
+
+		let highscoreCombo = getCookie("highscoreCombo");
+		let highscorePerfect = getCookie("highscorePerfect");
+		let highscoreGood = getCookie("highscoreGood");
+		let highscoreBad = getCookie("highscoreBad");
+		function showHitFeedback(text, color) {
+			const feedback = document.getElementById("hit-feedback");
+			feedback.innerText = text;
+			feedback.style.color = color;
+			feedback.style.textShadow = `0 0 10px ${color}`;
+			feedback.style.opacity = "1";
+			feedback.style.transform = "translate(-50%, -50%) scale(1.2)";
+			
+			feedback.classList.add("show");
+			
+			setTimeout(() => {
+				feedback.style.opacity = "0";
+				feedback.classList.remove("show");
+				feedback.style.transform = "translate(-50%, -50%) scale(1)";
+			}, 500);
+		}
+		function checkHit(accuracy) {
+			if (accuracy === "perfect") {
+				const perfectFeedbacks = [
+					"Perfect! ദ്ദി •⩊• )",
+					"Amazing! ദ്ദി ˉ꒳ˉ )✧",
+					"Excellent! ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧"
+				];
+				const randomFeedback = perfectFeedbacks[Math.floor(Math.random() * perfectFeedbacks.length)];
+				showHitFeedback(randomFeedback, "#a6e3a1");
+			} else if (accuracy === "good") {
+				showHitFeedback("Good! ( ദ്ദി ˙ᗜ˙ )", "#fab387"); // Yellow for good
+			} else if (accuracy === "bad") {
+				showHitFeedback("Bad! (˶°ㅁ°)!!", "#f38ba8"); // Red for bad
+			} else {
+				showHitFeedback("Failed! (╥﹏╥)", "#f38ba8"); // Red for bad
+			}
+		}
+		
+        function generateSequence() {
+            length = 4 + Math.min(Math.floor(combo / 5), 10);
+            sequence = [];
+            sequenceDisplay.innerHTML = '';
+            for (let i = 0; i < length; i++) {
+                let key = keys[Math.floor(Math.random() * keys.length)];
+                sequence.push(key);
+                let span = document.createElement('div');
+                span.className = 'sequence-box';
+				span.innerHTML = keySymbols[key];
+                sequenceDisplay.appendChild(span);
+            }
+            inputIndex = 0;
+			sequenceCompleted = false;
+        }
+        generateSequence();
+
+        function moveMarker() {
+            if (gameOver) return;
+            let speed = (0.5 + (combo * 0.01 * speedIncrease))-(length/100);
+            position += speed;
+            if (position >= 290) {
+				gameOver = true;
+				checkHit('failed');
+
+				// Reset the current scores
+				combo = 0;
+				perfectCount = 0;
+				goodCount = 0;
+				badCount = 0;
+
+				// Update the UI
+				comboCount.textContent = combo;
+				perfectDisplay.textContent = perfectCount;
+				goodDisplay.textContent = goodCount;
+				badDisplay.textContent = badCount;
+
+				setTimeout(() => {
+					gameOver = false;
+					position = 0;
+					generateSequence();
+					moveMarker();
+				}, 1000);
+			}
+            marker.style.left = position + 'px';
+            requestAnimationFrame(moveMarker);
+        }
+        moveMarker();
+
+        document.addEventListener('keydown', function(event) {
+			if (gameOver) return;
+
+			if (keys.includes(event.key) && !sequenceCompleted) {
+				if (event.key === sequence[inputIndex]) {
+					sequenceDisplay.children[inputIndex].classList.add('correct');
+					inputIndex++;
+					if (inputIndex === sequence.length) {
+						sequenceCompleted = true;
+					}
+				} else {
+					for (let box of sequenceDisplay.children) {
+						box.classList.remove('correct'); // Remove blue glow
+						box.classList.add('wrong');
+					}
+					setTimeout(() => {
+						for (let box of sequenceDisplay.children) {
+							box.classList.remove('wrong');
+						}
+					}, 200);
+					inputIndex = 0; // Reset progress
+				}
+			}
+
+			if (event.key === ' ' && inputIndex === sequence.length) {
+				let markerPos = position;
+				let hitZoneStart = 230, hitZoneEnd = 250;
+				let goodZoneStart = 2, goodZoneEnd = 269;
+
+				if (markerPos >= hitZoneStart && markerPos <= hitZoneEnd) {
+					combo++;
+					perfectCount++;
+					checkHit('perfect');
+				} else if (markerPos >= goodZoneStart && markerPos <= goodZoneEnd) {
+					combo++;
+					goodCount++;
+					checkHit('good');
+				} else {
+					combo++;
+					badCount++;
+					checkHit('bad');
+				}
+
+				if (combo > highscoreCombo) {
+					highscoreCombo = combo;
+					document.getElementById('highscore-combo').textContent = highscoreCombo;
+					setCookie("highscoreCombo", highscoreCombo);
+
+					highscorePerfect = perfectCount;
+					document.getElementById('highscore-perfect').textContent = highscorePerfect;
+					setCookie("highscorePerfect", highscorePerfect);
+
+					highscoreGood = goodCount;
+					document.getElementById('highscore-good').textContent = highscoreGood;
+					setCookie("highscoreGood", highscoreGood);
+
+					highscoreBad = badCount;
+					document.getElementById('highscore-bad').textContent = highscoreBad;
+					setCookie("highscoreBad", highscoreBad);
+				}
+
+				perfectDisplay.textContent = perfectCount;
+				goodDisplay.textContent = goodCount;
+				badDisplay.textContent = badCount;
+				comboCount.textContent = combo;
+
+				position = 0;
+				generateSequence();
+			}
+		});
+		function clearHighscore() {
+			document.cookie = "highscoreCombo=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			document.cookie = "highscorePerfect=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			document.cookie = "highscoreGood=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			document.cookie = "highscoreBad=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			
+			highscoreCombo = 0;
+			highscorePerfect = 0;
+			highscoreGood = 0;
+			highscoreBad = 0;
+
+			document.getElementById('highscore-combo').textContent = highscoreCombo;
+			document.getElementById('highscore-perfect').textContent = highscorePerfect;
+			document.getElementById('highscore-good').textContent = highscoreGood;
+			document.getElementById('highscore-bad').textContent = highscoreBad;
+		}
+		let tag = document.createElement("script");
+		tag.src = "https://www.youtube.com/iframe_api";
+		document.head.appendChild(tag);
+
+		let player;
+
+		function onYouTubeIframeAPIReady() {
+			player = new YT.Player("player", {
+				height: "0",
+				width: "0",
+				videoId: "jfKfPfyJRdk",
+				playerVars: {
+					autoplay: 1,
+					loop: 1,
+					mute: 0, // Make sure it's not muted
+					enablejsapi: 1,
+				},
+				events: {
+					onReady: function (event) {
+						event.target.playVideo();
+						console.log("Video should be playing...");
+					},
+					onStateChange: function (event) {
+						console.log("Player state:", event.data); 
+						// 1 = playing, 2 = paused, 0 = ended
+					}
+				}
+			});
+
+
+		}
+
+		// Unmute when user interacts with the page
+		document.addEventListener("click", function () {
+			if (player) player.unMute();
+		}, { once: true });
+
+    </script>
+</body>
+</html>
