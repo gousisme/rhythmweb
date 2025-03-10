@@ -73,7 +73,12 @@
 			setCookie("speedMode", this.checked ? "fast" : "normal");
 			speedIncrease = this.checked ? 1 : 0; // Faster when checked
 		});
-
+		
+		document.addEventListener("keydown", (event) => {
+			if (event.code === "Space") {
+			  event.preventDefault(); // Prevent spacebar default action
+			}
+		  });
 		
 		function setCookie(name, value) {
 			document.cookie = `${name}=${value}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
