@@ -142,7 +142,7 @@ body {
     font-weight: bold;*/
     text-transform: uppercase;
 	font-size: 25px;
-	-webkit-text-stroke: 3px white; /* Adds thickness */
+	-webkit-text-stroke: 3px #cdd6f4; /* Adds thickness */
 }
 
 .scoreboard, .highscore {
@@ -297,4 +297,67 @@ input:checked + .slider:before {
   align-items: center;
   font-weight:800;
   gap: 10px; /* Space between text and switch */
+}
+
+.virtual-keys {
+  position: absolute;
+  bottom: 20px;
+  justify-content: center;
+  align-items: flex-end;  /* Align the items to the bottom */
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .virtual-keys {
+    display: flex;
+  }
+}
+
+.arrow-keys {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-text-stroke: 3px #181825;
+}
+
+.arrow-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.virtual-key {
+  width: 60px;
+  height: 60px;
+  background-color: #a6d189;
+  box-shadow: 0 0 10px #a6d189;
+  color: #181825;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.virtual-key:active, .virtual-key:hover {
+  background-color: #e78284;
+  box-shadow: 0 0 10px #e78284;
+  transition: 0.2s ease-out;
+}
+
+.virtual-key.pressed {
+  background-color: #e78284;
+  box-shadow: 0 0 10px #e78284;
+}
+
+#virtual-left, #virtual-right, #virtual-up, #virtual-down, #virtual-space {
+  width: 60px;
+  height: 60px;
+}
+
+/* Space key */
+.space-button {
+  display: flex;
+  align-items: flex-end;  /* Align space to the bottom */
+  margin-left: 10px;
 }

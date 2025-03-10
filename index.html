@@ -46,6 +46,21 @@
 	</label>
 	<div id="hit-feedback"></div>
 	<div id="player"></div>
+	<div class="virtual-keys">
+	  <div class="arrow-keys">
+		<div class="arrow-row">
+		  <button class="virtual-key" id="virtual-up"><i class="fa-solid fa-chevron-up"></i></button>
+		</div>
+		<div class="arrow-row">
+		  <button class="virtual-key" id="virtual-left"><i class="fa-solid fa-chevron-left"></i></button>
+		  <button class="virtual-key" id="virtual-down"><i class="fa-solid fa-chevron-down"></i></button>
+		  <button class="virtual-key" id="virtual-right"><i class="fa-solid fa-chevron-right"></i></button>
+		</div>
+	  </div>
+	  <div class="space-button">
+		<button class="virtual-key" id="virtual-space"><i class="fa-solid fa-music"></i></button>
+	  </div>
+	</div>
     <script>
         let combo = 0;
         let perfectCount = 0, goodCount = 0, badCount = 0;
@@ -232,7 +247,7 @@
 			if (event.key === ' ' && inputIndex === sequence.length) {
 				let markerPos = position;
 				let hitZoneStart = 230, hitZoneEnd = 250;
-				let goodZoneStart = 2, goodZoneEnd = 269;
+				let goodZoneStart = 209, goodZoneEnd = 269;
 
 				if (markerPos >= hitZoneStart && markerPos <= hitZoneEnd) {
 					combo++;
@@ -327,7 +342,43 @@
 		document.addEventListener("click", function () {
 			if (player) player.unMute();
 		}, { once: true });
+		
+		document.getElementById('virtual-left').addEventListener('click', function() {
+			simulateKeyPress('ArrowLeft');
+		});
 
+		document.getElementById('virtual-up').addEventListener('click', function() {
+			simulateKeyPress('ArrowUp');
+		});
+
+		document.getElementById('virtual-down').addEventListener('click', function() {
+			simulateKeyPress('ArrowDown');
+		});
+
+		document.getElementById('virtual-right').addEventListener('click', function() {
+			simulateKeyPress('ArrowRight');
+		});
+
+		document.getElementById('virtual-space').addEventListener('click', function() {
+			simulateKeyPress(' ');
+		});
+
+		function simulateKeyPress(key) {
+			const event = new KeyboardEvent('keydown', { key: key });
+			document.dispatchEvent(event);
+		}
+		
+		document.querySelectorAll('.virtual-key').forEach(button => {
+		  button.addEventListener('mousedown', function () {
+			// Add the pressed class to change color on press
+			this.classList.add('pressed');
+
+			// Remove the pressed class after 500ms to revert the color
+			setTimeout(() => {
+			  this.classList.remove('pressed');
+			}, 250);  // Change time as needed
+		  });
+		});
     </script>
 </body>
 </html>
