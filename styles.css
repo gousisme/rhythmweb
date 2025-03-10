@@ -126,6 +126,9 @@ body {
 	justify-content: center;
 	margin-top: 10px;
 	gap: 10px;
+	flex-wrap: wrap; /* Allow wrapping to a new row when needed */
+	padding: 10px; /* Optional: Prevent the content from touching the edge */
+	width: 100%; /* Make sure the container takes the full width */
 }
 .sequence-box {
     display: flex;
@@ -310,6 +313,9 @@ input:checked + .slider:before {
 @media (max-width: 600px) {
   .virtual-keys {
     display: flex;
+  }
+  .button {
+	display: none;
   }
 }
 
