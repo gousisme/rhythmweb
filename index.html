@@ -223,14 +223,14 @@
         document.addEventListener('keydown', function(event) {
 			if (gameOver) return;
 
-			if (keys.includes(event.key) && !sequenceCompleted) {
+			if ((keys.includes(event.key) || event.key === ' ') && !sequenceCompleted) {
 				if (event.key === sequence[inputIndex]) {
 					sequenceDisplay.children[inputIndex].classList.add('correct');
 					inputIndex++;
 					if (inputIndex === sequence.length) {
 						sequenceCompleted = true;
 					}
-				} else {
+				} else if(event.key === ' ') {
 					for (let box of sequenceDisplay.children) {
 						box.classList.remove('correct'); // Remove blue glow
 						box.classList.add('wrong');
@@ -239,7 +239,18 @@
 						for (let box of sequenceDisplay.children) {
 							box.classList.remove('wrong');
 						}
-					}, 200);
+					}, 250);
+					inputIndex = 0; // Reset progress
+				} else {
+					for (let box of sequenceDisplay.children) {
+						sequenceDisplay.children[inputIndex].classList.add('wrong');
+					}
+					setTimeout(() => {
+						for (let box of sequenceDisplay.children) {
+							box.classList.remove('correct');
+							box.classList.remove('wrong');
+						}
+					}, 250);
 					inputIndex = 0; // Reset progress
 				}
 			}
