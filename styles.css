@@ -298,11 +298,25 @@ input:checked + .slider:before {
   transform: translateX(20px);
 }
 
+.parent-switch {
+  display: flex;
+  align-items: center;
+}
+
 .speed-label {
   display: flex;
   align-items: center;
   font-weight:500;
   gap: 10px; /* Space between text and switch */
+  margin-left: 10px;
+}
+
+.autoplay-label {
+  display: flex;
+  align-items: center;
+  font-weight:500;
+  gap: 10px; /* Space between text and switch */
+  margin-left: 20px;
 }
 
 .virtual-keys {

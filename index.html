@@ -37,13 +37,22 @@
 	  <svg viewBox="0 0 448 512" class="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>
 	</button>
 	<br>
-	<label class="speed-label">
-	  <label class="switch">
-		<input type="checkbox" id="speedToggle">
-		<span class="slider"></span>
-	  </label>
-	  <span id="speedText">Speed Increase</span>
-	</label>
+	<div class="parent-switch">
+		<label class="speed-label">
+		  <label class="switch">
+			<input type="checkbox" id="speedToggle">
+			<span class="slider"></span>
+		  </label>
+		  <span id="speedText">Speed Increase</span>
+		</label>
+		<label class="autoplay-label" id="autoplay-label">
+			<label class="switch">
+				<input type="checkbox" id="autoplayToggle">
+				<span class="slider"></span>
+			</label>
+			<span id="autoplayText">Autoplay</span>
+		</label>
+	</div>
 	<div id="hit-feedback"></div>
 	<div class="virtual-keys">
 	  <div class="arrow-keys">
@@ -177,7 +186,7 @@
 		}
 		
         function generateSequence() {
-            length = 4 + Math.min(Math.floor(combo / 5), 9);
+            length = 4 + Math.min(Math.floor(combo / 5), 5);
             sequence = [];
             sequenceDisplay.innerHTML = '';
             for (let i = 0; i < length; i++) {
@@ -195,7 +204,7 @@
 
         function moveMarker() {
             if (gameOver) return;
-            let speed = (0.5 + (combo * 0.01 * speedIncrease))-(length/100);
+            let speed = Math.min((0.5 + (combo * 0.01 * speedIncrease))-(length/100),0.825);
             position += speed;
             if (position >= 290) {
 				gameOver = true;
@@ -268,7 +277,7 @@
 					checkHit('bad');
 				}
 
-				if (combo > highscoreCombo) {
+				if (combo > highscoreCombo && !document.getElementById("autoplayToggle")) {
 					highscoreCombo = combo;
 					document.getElementById('highscore-combo').textContent = highscoreCombo;
 					setCookie("highscoreCombo", highscoreCombo);
@@ -487,6 +496,79 @@
 
 			audioElement.addEventListener("play", startVisualizer, { once: true });
 		});
+		
+		document.addEventListener("DOMContentLoaded", () => {
+			let autoplayToggle = document.getElementById("autoplayToggle");
+
+			if (autoplayToggle) {
+				autoplayToggle.addEventListener("change", function () {
+					autoplayEnabled = this.checked;
+					if (autoplayEnabled) autoplay();
+				});
+			}
+		});
+
+		let autoplayEnabled = false;
+
+		function autoplay() {
+			if (!autoplayEnabled || gameOver) return;
+
+			// First, press the sequence keys in order
+			sequence.forEach((key, index) => {
+				setTimeout(() => {
+					if (!autoplayEnabled) return;
+					simulateKeyPress(key);
+				}, index * 150);
+			});
+
+			// Then, wait for the hit zone before pressing space
+			function waitForHitZone() {
+				if (!autoplayEnabled || gameOver) return;
+
+				let hitZoneStart = 230, hitZoneEnd = 250; // Perfect hit zone range
+				let markerPos = position;
+
+				if (markerPos >= hitZoneStart && markerPos <= hitZoneEnd) {
+					simulateKeyPress(" ");
+					sequenceCompleted = true; // Mark sequence as done
+
+					setTimeout(() => {
+						sequenceCompleted = false; // Reset for next round
+						autoplay(); // Run again for the next sequence!
+					}, 500);
+				} else {
+					requestAnimationFrame(waitForHitZone);
+				}
+			}
+
+			waitForHitZone(); // Start waiting for the hit zone after pressing keys
+		}
+
+		function simulateKeyPress(key) {
+			let event = new KeyboardEvent("keydown", { key: key });
+			document.dispatchEvent(event);
+
+			setTimeout(() => {
+				let eventUp = new KeyboardEvent("keyup", { key: key });
+				document.dispatchEvent(eventUp);
+			}, 50);
+		}
+		
+		window.onload = function() {
+		  // Get the URL parameters
+		  const urlParams = new URLSearchParams(window.location.search);
+		  const autoplay = urlParams.get('autoplay');
+
+		  // Get the autoplay label
+		  const autoplayLabel = document.getElementById('autoplay-label');
+
+		  // Show the autoplay switch if ?autoplay=true, else hide it
+		  if (autoplay === 'true') {
+			autoplayLabel.style.display = 'flex'; // Show it
+		  } else {
+			autoplayLabel.style.display = 'none'; // Hide it
+		  }
+		};
 
     </script>
 </body>
