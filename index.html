@@ -98,6 +98,7 @@
 		};
 		let sequenceCompleted = false;
 		let speedIncrease = 0;
+		let autoplayEnabled = false;
 
 		document.getElementById("speedToggle").addEventListener("change", function () {
 			setCookie("speedMode", this.checked ? "fast" : "normal");
@@ -281,7 +282,7 @@
 					checkHit('bad');
 				}
 
-				if (combo > highscoreCombo && !document.getElementById("autoplayToggle")) {
+				if (combo > highscoreCombo && !autoplayEnabled) {
 					highscoreCombo = combo;
 					document.getElementById('highscore-combo').textContent = highscoreCombo;
 					setCookie("highscoreCombo", highscoreCombo);
@@ -511,8 +512,6 @@
 				});
 			}
 		});
-
-		let autoplayEnabled = false;
 
 		function autoplay() {
 			if (!autoplayEnabled || gameOver) return;
