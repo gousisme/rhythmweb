@@ -325,9 +325,6 @@
 			document.getElementById('highscore-good').textContent = highscoreGood;
 			document.getElementById('highscore-bad').textContent = highscoreBad;
 		}
-		let tag = document.createElement("script");
-		tag.src = "https://www.youtube.com/iframe_api";
-		document.head.appendChild(tag);
 
 		document.getElementById('virtual-left').addEventListener('click', function() {
 			simulateKeyPress('ArrowLeft');
@@ -375,8 +372,8 @@
 			let isSkipping = false; // Prevents spam skipping
 
 			const starterStation = {
-				name: "REYFM - #lofi",
-				url_resolved: "https://listen.reyfm.de/lofi_128kbps.mp3"
+				name: "Lofi 24/7",
+				url_resolved: "http://usa9.fastcast4u.com/proxy/jamz?mp=/1"
 			};
 
 			async function fetchStations() {

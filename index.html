@@ -325,9 +325,6 @@
 			document.getElementById('highscore-good').textContent = highscoreGood;
 			document.getElementById('highscore-bad').textContent = highscoreBad;
 		}
-		let tag = document.createElement("script");
-		tag.src = "https://www.youtube.com/iframe_api";
-		document.head.appendChild(tag);
 
 		document.getElementById('virtual-left').addEventListener('click', function() {
 			simulateKeyPress('ArrowLeft');
