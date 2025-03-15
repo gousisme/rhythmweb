@@ -69,7 +69,10 @@
 		<button class="virtual-key" id="virtual-space"><i class="fa-solid fa-music"></i></button>
 	  </div>
 	</div>
-	<div id="station-name">Loading...</div>
+	<div id="station-container">
+		<div id="station-name">Loading...</div>
+		<input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+	</div>
 	<audio id="radio-player" autoplay loop>
         <source src="" type="audio/mpeg">
         Your browser does not support the audio tag.
@@ -133,7 +136,7 @@
 			for (let cookie of cookies) {
 				let [key, value] = cookie.split("=");
 				if (key === name) {
-					return isNaN(value) ? value : parseInt(value); // Keep strings, parse numbers
+					return isNaN(value) ? value : parseFloat(value); // Keep strings, parse numbers
 				}
 			}
 			return null; // Return null if not found
@@ -370,7 +373,24 @@
 			let stations = [];
 			let failedStations = new Set();
 			let isSkipping = false; // Prevents spam skipping
-
+			
+			const volumeSlider = document.getElementById("volume-slider");
+			// Set initial volume from slider
+			const savedVolume = parseFloat(getCookie("volume"));
+			if (!isNaN(savedVolume)) {
+				volumeSlider.value = savedVolume;
+				audioElement.volume = savedVolume;
+			} else {
+				volumeSlider.value = 1;
+				audioElement.volume = 1;
+			}
+			// Update volume and save to cookie when changed
+			volumeSlider.addEventListener("input", function () {
+				const volume = parseFloat(this.value);
+				audioElement.volume = volume;
+				setCookie("volume", volume);
+			});
+			
 			const starterStation = {
 				name: "Lofi 24/7",
 				url_resolved: "http://usa9.fastcast4u.com/proxy/jamz?mp=/1"
@@ -578,7 +598,7 @@
 			autoplayLabel.style.display = 'none'; // Hide it
 		  }
 		};
-
+		
     </script>
 </body>
 </html>
