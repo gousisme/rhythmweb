@@ -402,30 +402,36 @@
 				}
 
 				clearTimeout(skipTimeout);
-				isSkipping = false; // Allow future skips
+				isSkipping = false;
 
 				console.log("Trying station:", station.name);
-				audioElement.src = station.url_resolved;
+
+				if (audioElement.src !== station.url_resolved) {
+					audioElement.src = station.url_resolved;
+					audioElement.load();
+				}
+
 				stationNameElement.innerHTML = `<i class="fa-solid fa-forward" id="skip-icon" style="cursor: pointer;"></i> Now Playing: <span style="font-weight:700;">${station.name}</span>`;
 				document.getElementById("skip-icon").addEventListener("click", skipStation);
 
 				try {
 					await audioElement.play();
+
+					// Only start auto-skip timer **after** playback starts
+					skipTimeout = setTimeout(() => {
+						if (audioElement.paused || audioElement.readyState < 3) {
+							console.log("Station not playing, skipping...");
+							failedStations.add(station);
+							skipStation();
+						}
+					}, 30000);
+
 				} catch (err) {
 					console.log(`Failed to play: ${station.name}`);
+					console.log(`Reason: ${err}`);
 					failedStations.add(station);
 					skipStation();
-					return;
 				}
-
-				// Auto-skip if silent after 30s
-				skipTimeout = setTimeout(() => {
-					if (audioElement.paused || audioElement.readyState < 3) {
-						console.log("Station not playing, skipping...");
-						failedStations.add(station);
-						skipStation();
-					}
-				}, 30000);
 
 				audioElement.addEventListener("playing", () => {
 					console.log("Station started playing, canceling skip...");
