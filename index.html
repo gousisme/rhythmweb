@@ -98,10 +98,24 @@
 		};
 		let sequenceCompleted = false;
 		let speedIncrease = 0;
+
 		document.getElementById("speedToggle").addEventListener("change", function () {
 			setCookie("speedMode", this.checked ? "fast" : "normal");
 			speedIncrease = this.checked ? 1 : 0; // Faster when checked
 		});
+
+		document.addEventListener("DOMContentLoaded", () => {
+			const speedToggle = document.getElementById("speedToggle");
+			if (!speedToggle) return; // Prevents errors if element is missing
+
+			// Load saved speed setting from cookie
+			const savedSpeed = getCookie("speedMode");
+			if (savedSpeed !== null) {
+				speedToggle.checked = savedSpeed === "fast";
+				speedIncrease = savedSpeed === "fast" ? 1 : 0; // Apply speed increase immediately
+			}
+		});
+
 		
 		document.addEventListener("keydown", (event) => {
 			if (event.code === "Space") {
@@ -136,16 +150,6 @@
 			document.getElementById('highscore-bad').textContent = highscoreBad;
 		});
 		
-		document.addEventListener("DOMContentLoaded", () => {
-			const speedToggle = document.getElementById("speedToggle");
-			if (!speedToggle) return; // Prevents errors if element is missing
-
-			// Load saved speed setting from cookie
-			const savedSpeed = getCookie("speedMode");
-			if (savedSpeed !== null) {
-				speedToggle.checked = savedSpeed === "fast";
-			}
-		});
 
 		let highscoreCombo = getCookie("highscoreCombo");
 		let highscorePerfect = getCookie("highscorePerfect");
