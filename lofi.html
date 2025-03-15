@@ -413,6 +413,7 @@
 					await audioElement.play();
 				} catch (err) {
 					console.log(`Failed to play: ${station.name}`);
+					console.log(`Reason: ${err}`);
 					failedStations.add(station);
 					skipStation();
 					return;
@@ -449,7 +450,8 @@
 				playStation(starterStation);
 			}
 
-			startRadio();
+			document.addEventListener("keydown", startRadio, { once: true });
+			document.addEventListener("click", startRadio, { once: true });
 		});
 
 		document.addEventListener("DOMContentLoaded", function () {
