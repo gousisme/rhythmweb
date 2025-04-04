@@ -398,7 +398,7 @@
 
 			async function fetchStations() {
 				try {
-					let response = await fetch('https://de1.api.radio-browser.info/json/stations/bytag/lofi');
+					let response = await fetch('https://all.api.radio-browser.info/json/stations/bytag/lofi');
 					stations = await response.json();
 				} catch (error) {
 					console.error("Error fetching radio API:", error);
