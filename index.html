@@ -220,7 +220,7 @@
 
 		function moveMarker() {
 			if (gameOver) return;
-			let speed = Math.min((0.7 + (combo * 0.01 * speedIncrease)) - (length / 100), 0.95);
+			let speed = Math.min((0.6 + (combo * 0.01 * speedIncrease)) - (length / 100), 0.95);
 			position += speed;
 			if (position >= 290) {
 				gameOver = true;
