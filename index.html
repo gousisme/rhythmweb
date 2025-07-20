@@ -176,7 +176,7 @@
 			feedback.innerText = text;
 			feedback.style.color = color;
 			feedback.style.textShadow = `0 0 10px ${color}`;
-			
+
 			feedback.classList.add("show");
 
 			setTimeout(() => {
@@ -201,7 +201,7 @@
 			}
 		}
 
-		function generateSequence() {
+		function generateSequence(skipAnimation = false) {
 			length = 4 + Math.min(Math.floor(combo / 5), 5);
 			sequence = [];
 			sequenceDisplay.innerHTML = '';
@@ -209,12 +209,22 @@
 				let key = keys[Math.floor(Math.random() * keys.length)];
 				sequence.push(key);
 				let span = document.createElement('div');
-				span.className = 'sequence-box animate';
+				span.className = skipAnimation ? 'sequence-box' : 'sequence-box animate';
 				span.innerHTML = keySymbols[key];
 				sequenceDisplay.appendChild(span);
 			}
 			inputIndex = 0;
 			sequenceCompleted = false;
+		}
+
+		function redisplaySequence() {
+			sequenceDisplay.innerHTML = '';
+			for (let i = 0; i < sequence.length; i++) {
+				let span = document.createElement('div');
+				span.className = 'sequence-box'; // No animation for redisplay
+				span.innerHTML = keySymbols[sequence[i]];
+				sequenceDisplay.appendChild(span);
+			}
 		}
 		generateSequence();
 
@@ -266,9 +276,7 @@
 						box.classList.add('wrong');
 					}
 					setTimeout(() => {
-						for (let box of sequenceDisplay.children) {
-							box.classList.remove('wrong');
-						}
+						redisplaySequence(); // Redisplay same sequence without animation
 					}, 250);
 					inputIndex = 0; // Reset progress
 				}
@@ -558,7 +566,7 @@
 
 			// Wait for sequence to complete before checking hit zone
 			const sequenceDelay = sequence.length * 100; // Add buffer time
-			
+
 			setTimeout(() => {
 				if (!autoplayEnabled || gameOver) return;
 				waitForHitZone();
@@ -579,7 +587,7 @@
 
 				if (markerPos >= hitZoneStart && markerPos <= hitZoneEnd) {
 					simulateKeyPress(" ");
-					
+
 					setTimeout(() => {
 						if (autoplayEnabled && !gameOver) {
 							autoplay(); // Run again for the next sequence!

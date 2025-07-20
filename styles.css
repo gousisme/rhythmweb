@@ -221,12 +221,12 @@ body::before {
 
 .timing-marker {
   height: 140%;
-  width: 16px;
+  width: 3px;
   background: linear-gradient(145deg, #cba6f7, #b4befe);
   position: absolute;
   left: 0;
   top: -20%;
-  border-radius: 8px;
+  border-radius: 2px;
   box-shadow:
     0 0 20px rgba(203, 166, 247, 0.8),
     0 0 40px rgba(203, 166, 247, 0.4);
@@ -480,7 +480,7 @@ body::before {
 
 #hit-feedback {
   position: absolute;
-  top: 37%;
+  top: 42%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 48px;
@@ -498,7 +498,7 @@ body::before {
 }
 
 #hit-feedback.show {
-  top: 30%;
+  top: 35%;
   animation: feedbackBounce 1s ease-out;
 }
 
