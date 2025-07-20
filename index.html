@@ -1,49 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhythm</title>
-    <link rel="stylesheet" href="styles.css?v=3">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rhythm</title>
+	<link rel="stylesheet" href="styles.css?v=3">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+		rel="stylesheet">
 	<link rel="icon" href="assets/images/favicon.png" type="image/png">
 </head>
+
 <body>
-    <div class="game-container">
-        <div class="sequence-container" id="sequence-display"></div>
-    </div>
-    <div class="timing-bar-container">
-        <div class="timing-bar"></div>
-        <div class="good-zone"></div>
-        <div class="hit-zone"></div>
-        <div class="timing-marker" id="marker"></div>
-    </div>
+	<div class="game-container">
+		<div class="sequence-container" id="sequence-display"></div>
+	</div>
+	<div class="timing-bar-container">
+		<div class="timing-bar"></div>
+		<div class="good-zone"></div>
+		<div class="hit-zone"></div>
+		<div class="timing-marker" id="marker"></div>
+	</div>
 	<div class="scoreboarddiv">
 		<div class="combo">Combo: <span id="combo-count">0</span></div>
 		<div class="scoreboard">
-			<span style="color:#a6e3a1;">Perfect: </span><span id="perfect-count">0</span><br><span style="color:#fab387;">Good: </span><span id="good-count">0</span><br><span style="color:#f38ba8;">Bad: </span><span id="bad-count">0</span>
+			<span style="color:#a6e3a1;">Perfect: </span><span id="perfect-count">0</span><br><span
+				style="color:#fab387;">Good: </span><span id="good-count">0</span><br><span style="color:#f38ba8;">Bad:
+			</span><span id="bad-count">0</span>
 		</div>
-    </div>
+	</div>
 	<div class="highscorediv">
 		<div class="combo">Highscore: <span id="highscore-combo">0</span></div>
 		<div class="highscore">
-			<span style="color:#a6e3a1;">Perfect: </span><span id="highscore-perfect">0</span><br><span style="color:#fab387;">Good: </span><span id="highscore-good">0</span><br><span style="color:#f38ba8;">Bad: </span><span id="highscore-bad">0</span>
+			<span style="color:#a6e3a1;">Perfect: </span><span id="highscore-perfect">0</span><br><span
+				style="color:#fab387;">Good: </span><span id="highscore-good">0</span><br><span
+				style="color:#f38ba8;">Bad: </span><span id="highscore-bad">0</span>
 		</div>
 	</div>
 	<button class="button" onclick="clearHighscore()" style="align:right;">
-	  <svg viewBox="0 0 448 512" class="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>
+		<svg viewBox="0 0 448 512" class="svgIcon">
+			<path
+				d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z">
+			</path>
+		</svg>
 	</button>
 	<br>
 	<div class="parent-switch">
 		<label class="speed-label">
-		  <label class="switch">
-			<input type="checkbox" id="speedToggle">
-			<span class="slider"></span>
-		  </label>
-		  <span id="speedText">Speed Increase</span>
+			<label class="switch">
+				<input type="checkbox" id="speedToggle">
+				<span class="slider"></span>
+			</label>
+			<span id="speedText">Speed Increase</span>
 		</label>
 		<label class="autoplay-label" id="autoplay-label">
 			<label class="switch">
@@ -55,54 +67,54 @@
 	</div>
 	<div id="hit-feedback"></div>
 	<div class="virtual-keys">
-	  <div class="arrow-keys">
-		<div class="arrow-row">
-		  <button class="virtual-key" id="virtual-up"><i class="fa-solid fa-chevron-up"></i></button>
+		<div class="arrow-keys">
+			<div class="arrow-row">
+				<button class="virtual-key" id="virtual-up"><i class="fa-solid fa-chevron-up"></i></button>
+			</div>
+			<div class="arrow-row">
+				<button class="virtual-key" id="virtual-left"><i class="fa-solid fa-chevron-left"></i></button>
+				<button class="virtual-key" id="virtual-down"><i class="fa-solid fa-chevron-down"></i></button>
+				<button class="virtual-key" id="virtual-right"><i class="fa-solid fa-chevron-right"></i></button>
+			</div>
 		</div>
-		<div class="arrow-row">
-		  <button class="virtual-key" id="virtual-left"><i class="fa-solid fa-chevron-left"></i></button>
-		  <button class="virtual-key" id="virtual-down"><i class="fa-solid fa-chevron-down"></i></button>
-		  <button class="virtual-key" id="virtual-right"><i class="fa-solid fa-chevron-right"></i></button>
+		<div class="space-button">
+			<button class="virtual-key" id="virtual-space"><i class="fa-solid fa-music"></i></button>
 		</div>
-	  </div>
-	  <div class="space-button">
-		<button class="virtual-key" id="virtual-space"><i class="fa-solid fa-music"></i></button>
-	  </div>
 	</div>
 	<div id="station-container">
 		<div id="station-name">Loading...</div>
 		<input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
 	</div>
 	<audio id="radio-player" autoplay loop>
-        <source src="" type="audio/mpeg">
-        Your browser does not support the audio tag.
-    </audio>
+		<source src="" type="audio/mpeg">
+		Your browser does not support the audio tag.
+	</audio>
 	<canvas id="visualizer" width="1080" height="300"></canvas>
-    <script>
-        let combo = 0;
-        let perfectCount = 0, goodCount = 0, badCount = 0;
-        let marker = document.getElementById('marker');
-        let comboCount = document.getElementById('combo-count');
-        let sequenceDisplay = document.getElementById('sequence-display');
-        let perfectDisplay = document.getElementById('perfect-count');
-        let goodDisplay = document.getElementById('good-count');
-        let badDisplay = document.getElementById('bad-count');
-        let position = 0;
-        let sequence = [];
-        let inputIndex = 0;
-        let gameOver = false;
+	<script>
+		let combo = 0;
+		let perfectCount = 0, goodCount = 0, badCount = 0;
+		let marker = document.getElementById('marker');
+		let comboCount = document.getElementById('combo-count');
+		let sequenceDisplay = document.getElementById('sequence-display');
+		let perfectDisplay = document.getElementById('perfect-count');
+		let goodDisplay = document.getElementById('good-count');
+		let badDisplay = document.getElementById('bad-count');
+		let position = 0;
+		let sequence = [];
+		let inputIndex = 0;
+		let gameOver = false;
 		let length = 0
-        const keys = ['ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight'];
-        const keySymbols = { 
-			'ArrowLeft': '<i class="fa-solid fa-chevron-left"></i>', 
-			'ArrowUp': '<i class="fa-solid fa-chevron-up"></i>', 
-			'ArrowDown': '<i class="fa-solid fa-chevron-down"></i>', 
-			'ArrowRight': '<i class="fa-solid fa-chevron-right"></i>' 
+		const keys = ['ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight'];
+		const keySymbols = {
+			'ArrowLeft': '<i class="fa-solid fa-chevron-left"></i>',
+			'ArrowUp': '<i class="fa-solid fa-chevron-up"></i>',
+			'ArrowDown': '<i class="fa-solid fa-chevron-down"></i>',
+			'ArrowRight': '<i class="fa-solid fa-chevron-right"></i>'
 		};
 		let sequenceCompleted = false;
 		let speedIncrease = 0;
 		let autoplayEnabled = false;
-		
+
 		document.getElementById("speedToggle").addEventListener("change", function () {
 			setCookie("speedMode", this.checked ? "fast" : "normal");
 			speedIncrease = this.checked ? 1 : 0; // Faster when checked
@@ -120,13 +132,13 @@
 			}
 		});
 
-		
+
 		document.addEventListener("keydown", (event) => {
 			if (event.code === "Space") {
-			  event.preventDefault(); // Prevent spacebar default action
+				event.preventDefault(); // Prevent spacebar default action
 			}
-		  });
-		
+		});
+
 		function setCookie(name, value) {
 			document.cookie = `${name}=${value}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
 		}
@@ -153,7 +165,7 @@
 			document.getElementById('highscore-good').textContent = highscoreGood;
 			document.getElementById('highscore-bad').textContent = highscoreBad;
 		});
-		
+
 
 		let highscoreCombo = getCookie("highscoreCombo");
 		let highscorePerfect = getCookie("highscorePerfect");
@@ -164,16 +176,12 @@
 			feedback.innerText = text;
 			feedback.style.color = color;
 			feedback.style.textShadow = `0 0 10px ${color}`;
-			feedback.style.opacity = "1";
-			feedback.style.transform = "translate(-50%, -50%) scale(1.2)";
 			
 			feedback.classList.add("show");
-			
+
 			setTimeout(() => {
-				feedback.style.opacity = "0";
 				feedback.classList.remove("show");
-				feedback.style.transform = "translate(-50%, -50%) scale(1)";
-			}, 500);
+			}, 1000);
 		}
 		function checkHit(accuracy) {
 			if (accuracy === "perfect") {
@@ -192,29 +200,29 @@
 				showHitFeedback("Failed! (╥﹏╥)", "#f38ba8"); // Red for bad
 			}
 		}
-		
-        function generateSequence() {
-            length = 4 + Math.min(Math.floor(combo / 5), 5);
-            sequence = [];
-            sequenceDisplay.innerHTML = '';
-            for (let i = 0; i < length; i++) {
-                let key = keys[Math.floor(Math.random() * keys.length)];
-                sequence.push(key);
-                let span = document.createElement('div');
-                span.className = 'sequence-box';
-				span.innerHTML = keySymbols[key];
-                sequenceDisplay.appendChild(span);
-            }
-            inputIndex = 0;
-			sequenceCompleted = false;
-        }
-        generateSequence();
 
-        function moveMarker() {
-            if (gameOver) return;
-            let speed = Math.min((0.5 + (combo * 0.01 * speedIncrease))-(length/100),0.79);
-            position += speed;
-            if (position >= 290) {
+		function generateSequence() {
+			length = 4 + Math.min(Math.floor(combo / 5), 5);
+			sequence = [];
+			sequenceDisplay.innerHTML = '';
+			for (let i = 0; i < length; i++) {
+				let key = keys[Math.floor(Math.random() * keys.length)];
+				sequence.push(key);
+				let span = document.createElement('div');
+				span.className = 'sequence-box';
+				span.innerHTML = keySymbols[key];
+				sequenceDisplay.appendChild(span);
+			}
+			inputIndex = 0;
+			sequenceCompleted = false;
+		}
+		generateSequence();
+
+		function moveMarker() {
+			if (gameOver) return;
+			let speed = Math.min((0.7 + (combo * 0.01 * speedIncrease)) - (length / 100), 0.95);
+			position += speed;
+			if (position >= 290) {
 				gameOver = true;
 				checkHit('failed');
 
@@ -237,12 +245,12 @@
 					moveMarker();
 				}, 1000);
 			}
-            marker.style.left = position + 'px';
-            requestAnimationFrame(moveMarker);
-        }
-        moveMarker();
+			marker.style.left = position + 'px';
+			requestAnimationFrame(moveMarker);
+		}
+		moveMarker();
 
-        document.addEventListener('keydown', function(event) {
+		document.addEventListener('keydown', function (event) {
 			if (gameOver) return;
 
 			if ((keys.includes(event.key) || event.key === ' ') && !sequenceCompleted) {
@@ -268,8 +276,8 @@
 
 			if (event.key === ' ' && inputIndex === sequence.length) {
 				let markerPos = position;
-				let hitZoneStart = 230, hitZoneEnd = 250;
-				let goodZoneStart = 209, goodZoneEnd = 269;
+				let hitZoneStart = 220, hitZoneEnd = 240;
+				let goodZoneStart = 199, goodZoneEnd = 259;
 
 				if (markerPos >= hitZoneStart && markerPos <= hitZoneEnd) {
 					combo++;
@@ -317,7 +325,7 @@
 			document.cookie = "highscorePerfect=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 			document.cookie = "highscoreGood=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 			document.cookie = "highscoreBad=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-			
+
 			highscoreCombo = 0;
 			highscorePerfect = 0;
 			highscoreGood = 0;
@@ -329,23 +337,23 @@
 			document.getElementById('highscore-bad').textContent = highscoreBad;
 		}
 
-		document.getElementById('virtual-left').addEventListener('click', function() {
+		document.getElementById('virtual-left').addEventListener('click', function () {
 			simulateKeyPress('ArrowLeft');
 		});
 
-		document.getElementById('virtual-up').addEventListener('click', function() {
+		document.getElementById('virtual-up').addEventListener('click', function () {
 			simulateKeyPress('ArrowUp');
 		});
 
-		document.getElementById('virtual-down').addEventListener('click', function() {
+		document.getElementById('virtual-down').addEventListener('click', function () {
 			simulateKeyPress('ArrowDown');
 		});
 
-		document.getElementById('virtual-right').addEventListener('click', function() {
+		document.getElementById('virtual-right').addEventListener('click', function () {
 			simulateKeyPress('ArrowRight');
 		});
 
-		document.getElementById('virtual-space').addEventListener('click', function() {
+		document.getElementById('virtual-space').addEventListener('click', function () {
 			simulateKeyPress(' ');
 		});
 
@@ -353,19 +361,19 @@
 			const event = new KeyboardEvent('keydown', { key: key });
 			document.dispatchEvent(event);
 		}
-		
-		document.querySelectorAll('.virtual-key').forEach(button => {
-		  button.addEventListener('mousedown', function () {
-			// Add the pressed class to change color on press
-			this.classList.add('pressed');
 
-			// Remove the pressed class after 500ms to revert the color
-			setTimeout(() => {
-			  this.classList.remove('pressed');
-			}, 250);  // Change time as needed
-		  });
+		document.querySelectorAll('.virtual-key').forEach(button => {
+			button.addEventListener('mousedown', function () {
+				// Add the pressed class to change color on press
+				this.classList.add('pressed');
+
+				// Remove the pressed class after 500ms to revert the color
+				setTimeout(() => {
+					this.classList.remove('pressed');
+				}, 250);  // Change time as needed
+			});
 		});
-		
+
 		document.addEventListener("DOMContentLoaded", async function () {
 			const audioElement = document.getElementById('radio-player');
 			const stationNameElement = document.getElementById('station-name');
@@ -373,7 +381,7 @@
 			let stations = [];
 			let failedStations = new Set();
 			let isSkipping = false; // Prevents spam skipping
-			
+
 			const volumeSlider = document.getElementById("volume-slider");
 			// Set initial volume from slider
 			const savedVolume = parseFloat(getCookie("volume"));
@@ -481,7 +489,7 @@
 			audioElement.crossOrigin = "anonymous";
 			const canvas = document.getElementById('visualizer');
 			const ctx = canvas.getContext('2d');
-			
+
 			function startVisualizer() {
 				const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 				const analyser = audioCtx.createAnalyser();
@@ -500,7 +508,7 @@
 					analyser.getByteFrequencyData(dataArray);
 
 					ctx.clearRect(0, 0, canvas.width, canvas.height);
-					let barWidth = (canvas.width / bufferLength)*2;
+					let barWidth = (canvas.width / bufferLength) * 2;
 					let barHeight;
 					let x = 0;
 
@@ -525,7 +533,7 @@
 
 			audioElement.addEventListener("play", startVisualizer, { once: true });
 		});
-		
+
 		document.addEventListener("DOMContentLoaded", () => {
 			let autoplayToggle = document.getElementById("autoplayToggle");
 
@@ -552,7 +560,7 @@
 			function waitForHitZone() {
 				if (!autoplayEnabled || gameOver) return;
 
-				let hitZoneStart = 230, hitZoneEnd = 250; // Perfect hit zone range
+				let hitZoneStart = 220, hitZoneEnd = 240; // Perfect hit zone range
 				let markerPos = position;
 
 				if (markerPos >= hitZoneStart && markerPos <= hitZoneEnd) {
@@ -580,23 +588,24 @@
 				document.dispatchEvent(eventUp);
 			}, 50);
 		}
-		
-		window.onload = function() {
-		  // Get the URL parameters
-		  const urlParams = new URLSearchParams(window.location.search);
-		  const autoplay = urlParams.get('autoplay');
 
-		  // Get the autoplay label
-		  const autoplayLabel = document.getElementById('autoplay-label');
+		window.onload = function () {
+			// Get the URL parameters
+			const urlParams = new URLSearchParams(window.location.search);
+			const autoplay = urlParams.get('autoplay');
 
-		  // Show the autoplay switch if ?autoplay=true, else hide it
-		  if (autoplay === 'true') {
-			autoplayLabel.style.display = 'flex'; // Show it
-		  } else {
-			autoplayLabel.style.display = 'none'; // Hide it
-		  }
+			// Get the autoplay label
+			const autoplayLabel = document.getElementById('autoplay-label');
+
+			// Show the autoplay switch if ?autoplay=true, else hide it
+			if (autoplay === 'true') {
+				autoplayLabel.style.display = 'flex'; // Show it
+			} else {
+				autoplayLabel.style.display = 'none'; // Hide it
+			}
 		};
 
-    </script>
+	</script>
 </body>
+
 </html>
