@@ -41,7 +41,7 @@
 				style="color:#f38ba8;">Bad: </span><span id="highscore-bad">0</span>
 		</div>
 	</div>
-	<button class="button" onclick="clearHighscore()" style="align:right;">
+	<button class="button" onclick="clearHighscore()">
 		<svg viewBox="0 0 448 512" class="svgIcon">
 			<path
 				d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z">
@@ -555,30 +555,42 @@
 				setTimeout(() => {
 					if (!autoplayEnabled) return;
 					simulateKeyPress(key);
-				}, index * 150);
+				}, index * 100);
 			});
+
+			// Wait for sequence to complete before checking hit zone
+			const sequenceDelay = sequence.length * 100; // Add buffer time
+			
+			setTimeout(() => {
+				if (!autoplayEnabled || gameOver) return;
+				waitForHitZone();
+			}, sequenceDelay);
 
 			// Then, wait for the hit zone before pressing space
 			function waitForHitZone() {
 				if (!autoplayEnabled || gameOver) return;
+
+				// Check if sequence is actually completed
+				if (inputIndex !== sequence.length) {
+					requestAnimationFrame(waitForHitZone);
+					return;
+				}
 
 				let hitZoneStart = 220, hitZoneEnd = 240; // Perfect hit zone range
 				let markerPos = position;
 
 				if (markerPos >= hitZoneStart && markerPos <= hitZoneEnd) {
 					simulateKeyPress(" ");
-					sequenceCompleted = true; // Mark sequence as done
-
+					
 					setTimeout(() => {
-						sequenceCompleted = false; // Reset for next round
-						autoplay(); // Run again for the next sequence!
+						if (autoplayEnabled && !gameOver) {
+							autoplay(); // Run again for the next sequence!
+						}
 					}, 500);
-				} else {
+				} else if (markerPos < 290) { // Only continue if marker hasn't reached the end
 					requestAnimationFrame(waitForHitZone);
 				}
 			}
-
-			waitForHitZone(); // Start waiting for the hit zone after pressing keys
 		}
 
 		function simulateKeyPress(key) {
