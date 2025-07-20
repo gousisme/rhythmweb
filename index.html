@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Rhythm</title>
-	<link rel="stylesheet" href="styles.css?v=3">
+	<link rel="stylesheet" href="styles.css?v=4">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -209,7 +209,7 @@
 				let key = keys[Math.floor(Math.random() * keys.length)];
 				sequence.push(key);
 				let span = document.createElement('div');
-				span.className = 'sequence-box';
+				span.className = 'sequence-box animate';
 				span.innerHTML = keySymbols[key];
 				sequenceDisplay.appendChild(span);
 			}
@@ -220,7 +220,7 @@
 
 		function moveMarker() {
 			if (gameOver) return;
-			let speed = Math.min((0.6 + (combo * 0.01 * speedIncrease)) - (length / 100), 0.95);
+			let speed = Math.min((0.55 + (combo * 0.01 * speedIncrease)) - (length / 100), 0.95);
 			position += speed;
 			if (position >= 290) {
 				gameOver = true;
